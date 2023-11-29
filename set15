@@ -1,0 +1,88 @@
+Write a program to create a child process using fork().The parent should goto sleep state and child process should begin its execution. In the child process, use execl() to execute the “ls” 
+
+command.
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <unistd.h>
+
+int main() {
+
+ pid_t child_pid = fork();
+
+ if (child_pid < 0) {
+
+ perror("Fork failed");
+
+ exit(1);
+
+ } else if (child_pid == 0) {
+
+ printf("Child Process (PID %d) is running and executing 'ls'.\n", getpid());
+
+ execl("/bin/ls", "ls", (char *)NULL);
+
+ perror("execl() failed");
+
+ exit(1);
+
+ } else {
+
+ printf("Parent Process (PID %d) is going to sleep.\n", getpid());
+
+ sleep(2); 
+
+ printf("Parent Process (PID %d) is awake.\n", getpid());}
+  return 0;}
+
+Write the simulation program to implement demand paging and show the page scheduling and total number of page faults for the following given page reference string. Give input n as 
+
+the number of memory frames. Reference String :7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2 Implement LRU
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+int main() {
+
+ int n, p = 0, r, q = 0;
+
+ printf("Enter the number of memory frames: ");
+
+ scanf("%d", &n);
+
+ int frames[n];
+
+ printf("Reference String: ");
+
+ while (scanf("%d", &r) != EOF) {
+
+ int found = 0;
+
+ for (int i = 0; i < n; i++) {
+
+ if (frames[i] == r) {
+
+ found = 1;
+
+ break;}}
+
+ if (!found) {
+
+ printf("Page %d -> Page Fault\n", r);
+
+ frames[p % n] = r;
+
+ p++;}
+
+ q++;}
+
+ printf("Total Page Faults: %d\n", p);
+
+ return 0;}
