@@ -1,0 +1,76 @@
+Write a program to find the execution time taken for execution of a given set of instructions (use clock() function) 
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <time.h>
+
+int main() {
+
+ clock_t start_time, end_time;
+
+ double execution_time;
+
+ start_time = clock();
+
+ for (int i = 0; i < 1000000; i++) {
+
+ int result = i * i;}
+
+ end_time = clock();
+
+ execution_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+
+ printf("Execution time: %f seconds\n", execution_time);
+
+ return 0;}
+
+Q.2 Write the simulation program to implement demand paging and show the page scheduling and total number of page faults for the following given page reference string. Give input n 
+
+=3 as the number of memory frames. Reference String : 0, 2, 1, 6, 4, 0, 1, 0, 3, 1, 2, 1 Implement FIFO 
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+int main() {
+
+ int n, f = 0, p = 0, r, q = 0;
+
+ printf("Enter the number of memory frames: ");
+
+ scanf("%d", &n);
+
+ int frames[n];
+
+ printf("Reference String: ");
+
+ while (scanf("%d", &r) != EOF) {
+
+ int found = 0;
+
+ for (int i = 0; i < n; i++) {
+
+ if (frames[i] == r) {
+
+ found = 1;
+
+ break;}}
+
+ if (!found) {
+
+ printf("Page %d -> Page Fault\n", r);
+
+ frames[f] = r;
+
+ f = (f + 1) % n;
+
+ p++;}
+
+ q++;}
+
+ printf("Total Page Faults: %d\n", p);
+
+ return 0;}
