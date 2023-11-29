@@ -1,0 +1,90 @@
+Write a program to illustrate the concept of orphan process ( Using fork() and sleep())
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <unistd.h>
+
+int main() {
+
+ pid_t child_pid = fork();
+
+ if (child_pid == 0) {
+
+ printf("Child process (PID: %d) is running, and its parent (PPID: %d) has terminated.\n", getpid(), getppid());
+
+ sleep(5); 
+
+ printf("Child process (PID: %d) has completed.\n", getpid());
+
+ } else if (child_pid > 0) {
+
+ printf("Parent process (PID: %d) is running and will terminate shortly.\n", getpid());
+
+ sleep(2); 
+
+ printf("Parent process (PID: %d) has terminated.\n", getpid());
+
+ } else {
+
+ perror("Fork failed");
+
+ return 1;}
+
+ return 0;} 
+
+ Q.2 Write the program to simulate Non-preemptive Priority scheduling. The arrival time and first CPU burst and priority for different n number of processes should be input to the 
+
+algorithm. Assume the fixed IO waiting time (2 units). The next CPU-burst should be generated randomly. The output should give Gantt chart, turnaround time and waiting time for each 
+
+process. Also find the average waiting time and turnaround time.
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <time.h>
+
+#define N 10
+
+typedef struct { int p, b, tT, tW; } P;
+
+int main() {
+
+ int n, t = 0, tTAT = 0, tWT = 0;
+
+ srand(time(0));
+
+ printf("Enter the number of processes: ");
+
+ scanf("%d", &n);
+
+ P p[N] = {0};
+
+ for (int i = 0; i < n; i++) p[i].p = rand() % 10, p[i].b = rand() % 10 + 1;
+
+ printf("Gantt Chart:\n");
+
+ for (int i = 0; i < n; i++) {
+
+ int m = -1;
+
+ for (int j = 0; j < n; j++) if (p[j].p < p[i].p) m = j;
+
+ printf("P%d ", m + 1);
+
+ p[m].tT = t + p[m].b, p[m].tW = t, t += p[m].b + 2;
+
+ tTAT += p[m].tT, tWT += p[m].tW, p[m].p = 11;}
+  printf("\nProcess\tTurnaround\tWaiting\n");
+
+ for (int i = 0; i < n; i++) printf("P%d\t%d\t\t%d\n", i + 1, p[i].tT, p[i].tW);
+
+ printf("Avg TAT: %.2f\nAvg WT: %.2f\n", (float)tTAT / n, (float)tWT / n);
+
+ return 0;}
