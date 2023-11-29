@@ -1,0 +1,87 @@
+Create a child process using fork(), display parent and child process id. Child process will display the message “Hello World” and the parent process should display “Hi”. 
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <unistd.h>
+
+int main() {
+pid_t child_pid = fork();
+
+ if (child_pid == 0) {
+
+ printf("Hello World\n");
+
+ } else if (child_pid > 0) {
+
+ printf("Hi\n");
+
+ } else {
+
+ perror("Fork failed");
+
+ return 1;}
+
+ return 0;} 
+
+
+ 
+
+Write the simulation program using SJF (non-preemptive). The arrival time and first CPU bursts of different jobs should be input to the system. Assume the fixed I/O waiting time (2 
+
+units). The next CPU burst should be generated using random function. The output should give the Gantt chart, Turnaround Time and Waiting time for each process and average times
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <time.h>
+
+#define MAX_PROCESSES 10
+
+typedef struct {
+
+ int arrival, burst, turnaround, waiting;
+
+} Process;
+
+int cmpArrival(const void *a, const void *b) { return ((Process *)a)->arrival - ((Process *)b)->arrival; }
+
+int main() {
+
+ int n; scanf("%d", &n);
+
+ Process p[MAX_PROCESSES] = {0};
+
+ srand(time(0));
+
+ for (int i = 0; i < n; i++) p[i].arrival = i, p[i].burst = rand() % 10 + 1;
+
+ qsort(p, n, sizeof(Process), cmpArrival);
+
+ printf("Gantt Chart:\n");
+
+ float tTAT = 0, tWT = 0, t = 0;
+
+ for (int i = 0; i < n; i++) {
+
+ printf("P%d ", i + 1);
+
+ p[i].turnaround = t + p[i].burst - p[i].arrival;
+
+ p[i].waiting = p[i].turnaround - p[i].burst;
+
+ t += p[i].burst + 2;
+
+ tTAT += p[i].turnaround;
+
+ tWT += p[i].waiting;}
+
+ printf("\nProcess\tTurnaround\tWaiting\n");
+
+ for (int i = 0; i < n; i++) printf("P%d\t%d\t\t%d\n", i + 1, p[i].turnaround, p[i].waiting);
+
+ printf("Avg TAT: %.2f\nAvg WT: %.2f\n", tTAT / n, tWT / n);}
