@@ -1,0 +1,90 @@
+Write a program to illustrate the concept of orphan process ( Using fork() and sleep()) .
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <unistd.h>
+
+int main() {
+
+ pid_t child_pid = fork();
+
+ if (child_pid == 0) {
+
+ printf("Child process (PID %d) is running.\n", getpid());
+
+ sleep(100); 
+
+ printf("Child process (PID %d) is done.\n", getpid());
+
+ } else if (child_pid > 0) {
+
+ printf("Parent process (PID %d) is running.\n", getpid());
+
+ printf("Parent process (PID %d) is done.\n", getpid());
+
+ } else {
+
+ perror("Fork failed");
+
+ return 1;}
+
+ return 0;}
+ Write the simulation program using SJF(non-preemptive). The arrival time and first CPU bursts of different jobsshould be input to the system. The Assume the fixed I/O waiting time (2 
+
+units).Thenext CPU burst should be generated using random function. The output should give the Gantt chart, Turnaround Time and Waiting time for each process and average times.
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <time.h>
+
+typedef struct { int a, b, t, w; } P;
+
+int main() {
+
+ int n, io = 2, t = 0; srand(time(0));
+
+ printf("Enter n: "); scanf("%d", &n);
+
+ P p[n]; for (int i = 0; i < n; i++) {
+
+ p[i].a = i; printf("Arrival time for P%d: ", i + 1);
+
+ scanf("%d", &p[i].t); printf("Burst time for P%d: ", i + 1);
+
+ scanf("%d", &p[i].w);}
+
+ for (int i = 0; i < n; i++) {
+
+ for (int j = i + 1; j < n; j++) {
+
+ if (p[i].t > p[j].t) {
+
+ P temp = p[i]; p[i] = p[j]; p[j] = temp;}}}
+
+ printf("Gantt Chart:\n");
+
+ for (int i = 0; i < n; i++) {
+
+ printf("P%d ", p[i].a + 1);
+
+ t += p[i].w;
+
+ p[i].w = t - p[i].t;
+
+ p[i].t = p[i].w + p[i].w;}
+
+ printf("\nTurnaround Time\tWaiting Time\n");
+
+ for (int i = 0; i < n; i++) {
+
+ printf("P%d\t%d\t\t%d\n", p[i].a + 1, p[i].t, p[i].w);}
+
+ return 0;}
