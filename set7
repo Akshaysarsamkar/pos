@@ -1,0 +1,67 @@
+Q.1 Write a program to create a child process using fork().The parent should goto sleep state and child process should begin its execution. In the child process, use execl() to execute the 
+
+“ls” command. 
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <unistd.h>
+
+int main() {
+
+ pid_t child_pid = fork();
+
+ if (child_pid == 0) {
+
+ execl("/bin/ls", "ls", (char *)NULL); 
+
+ } else if (child_pid > 0) {
+
+ sleep(5); 
+
+ } else {
+
+ perror("Fork failed");
+
+ return 1;}
+
+ return 0;}
+
+Q.2 Write the simulation program using FCFS. The arrival time and first CPU bursts of different jobs should be input to the system. Assume the fixed I/O waiting time (2 units). The next 
+
+CPU burst should be generated using random function. The output should give the Gantt chart, Turnaround Time and Waiting time for each process and average times
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <time.h>
+
+int main() {
+
+ int n; srand(time(NULL));
+
+ printf("Enter the number of processes: "); scanf("%d", &n);
+
+ float tTAT = 0, tWT = 0, t = 0;
+
+ for (int i = 0; i < n; i++) {
+
+ int burst = rand() % 10 + 1;
+
+ t += burst + 2; 
+
+ printf("P%d %d %d\n", i + 1, (int)t, (int)t - burst);
+
+ tTAT += t;
+
+ tWT += t - burst;}
+
+ printf("Avg TAT: %.2f\nAvg WT: %.2f\n", tTAT / n, tWT / n);
+
+ return 0;
+
+}
