@@ -1,0 +1,102 @@
+Creating a child process using the command exec(). Note down process ids of the parent and the child processes, check whether the control is given back to the parent after the 
+
+child process terminates. 
+
+ANSWER-1
+
+#include <stdio.h>
+
+#include <unistd.h>
+
+int main() { 
+pid_t child_pid = fork();
+
+ if (child_pid == 0) {
+
+ printf("Child process (PID: %d)\n", getpid());
+
+ execl("/bin/ls", "ls", NULL); // Replace with the desired command
+
+ } else if (child_pid > 0) {
+
+ printf("Parent process (PID: %d)\n", getpid());
+
+ wait(NULL); 
+
+ printf("Child process has terminated.\n");
+
+ } else {
+
+ perror("Fork failed");
+
+ return 1;}
+
+ return 0;}
+
+Q.2 Write the simulation program using FCFS. The arrival time and first CPU bursts of different jobs should be input to the system. Assume the fixed I/O waiting time (2 units). The next 
+
+CPU burst should be generated using random function. The output should give the Gantt chart,Turnaround Time and Waiting time for each process and average times.
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <time.h>
+
+#define MAX_PROCESSES 10
+
+typedef struct {
+
+ int arrival, burst, turnaround, waiting;
+
+} Process;
+
+int main() {
+
+ int n;
+
+ printf("Enter the number of processes: ");
+
+ scanf("%d", &n);
+
+ Process p[MAX_PROCESSES] = {0};
+
+ srand(time(NULL));
+
+ for (int i = 0; i < n; i++) {
+
+ p[i].arrival = i;
+
+ p[i].burst = rand() % 10 + 1; }
+
+ printf("Gantt Chart:\n");
+
+ float tTAT = 0, tWT = 0, t = 0;
+
+ for (int i = 0; i < n; i++) {
+
+ printf("P%d ", i + 1);
+
+ t += p[i].burst + 2; // Add I/O waiting time
+
+ p[i].turnaround = t - p[i].arrival;
+
+ p[i].waiting = p[i].turnaround - p[i].burst;
+
+ tTAT += p[i].turnaround;
+
+ tWT += p[i].waiting;}
+
+ printf("\n");
+
+ printf("Process\tTurnaround\tWaiting\n");
+
+ for (int i = 0; i < n; i++) {
+
+ printf("P%d\t%d\t\t%d\n", i + 1, p[i].turnaround, p[i].waiting);} 
+ printf("Avg TAT: %.2f\nAvg WT: %.2f\n", tTAT / n, tWT / n);
+
+ return 0;
+ }
