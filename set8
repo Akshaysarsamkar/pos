@@ -1,0 +1,107 @@
+Q.1 Write a C program to accept the number of process and resources and find the need matrix content and display it.
+
+ANSWER-1
+
+#include <stdio.h>
+
+int main() {
+
+ int n, m;
+
+ printf("Enter processes and resources: ");
+
+ scanf("%d %d", &n, &m);
+  int alloc[n][m], max[n][m], need[n][m];
+
+ printf("Enter allocation and max matrices:\n");
+
+ for (int i = 0; i < n; i++) {
+
+ for (int j = 0; j < m; j++) {
+
+ scanf("%d %d", &alloc[i][j], &max[i][j]);
+
+ need[i][j] = max[i][j] - alloc[i][j];}}
+
+ printf("Need matrix:\n");
+
+ for (int i = 0; i < n; i++) {
+
+ for (int j = 0; j < m; j++) {
+
+ printf("%d ", need[i][j]);}
+
+ printf("\n");}
+
+ return 0;}
+
+Q.2. Write the simulation program to implement demand paging and show the page scheduling and total number of page faults for the following given page reference string. Give input n 
+
+=3 as the number of memory frames. Reference String : 12,15,12,18,6,8,11,12,19,12,6,8,12,15,19,8 Implement OPT
+
+ANSWER-2
+
+#include <stdio.h>
+
+int main() {
+
+ int n; printf("Enter memory frames: "); scanf("%d", &n);
+
+ int ref[] = {12, 15, 12, 18, 6, 8, 11, 12, 19, 12, 6, 8, 12, 15, 19, 8};
+
+ int len = sizeof(ref) / sizeof(ref[0]), mem[n], faults = 0;
+
+ for (int j = 0; j < n; j++) mem[j] = -1;
+
+ printf("Page Scheduling using OPT:\n");
+
+ for (int r = 0; r < len; r++) {
+
+ int p = ref[r], found = 0, future = -1, fIdx = 0;
+
+ for (int j = 0; j < n; j++) {
+
+ if (mem[j] == p) {
+
+ found = 1;
+
+ break;}
+
+ for (int k = r + 1; k < len; k++) {
+
+ if (mem[j] == ref[k]) {
+
+ future = k;
+
+ break;}}
+
+ if (future == -1) {
+
+ fIdx = j;
+
+ break;}
+
+ if (future > fIdx) {
+
+ fIdx = j;}}
+
+ if (!found) {
+
+ faults++;
+
+ if (mem[fIdx] != -1) {
+
+ printf("Page %d replaced by Page %d\n", mem[fIdx], p);}
+
+ mem[fIdx] = p;
+
+ printf("Page %d -> Page Fault\nMemory: ", p);
+
+ for (int j = 0; j < n; j++) { 
+ printf("%d ", mem[j]);}
+
+ printf("\n");}}
+
+ printf("Total Page Faults: %d\n", faults);
+
+ return 0;}
