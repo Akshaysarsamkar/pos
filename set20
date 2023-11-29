@@ -1,0 +1,120 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <unistd.h>
+
+#include <sys/wait.h>
+
+int main() {
+
+ pid_t child_pid = fork();
+
+ if (child_pid < 0) {
+
+ perror("Fork failed");
+
+ exit(1);}
+
+ if (child_pid == 0) {
+
+ execl("/bin/ls", "ls", NULL);
+
+ perror("Execl failed");
+
+ exit(1);
+
+ } else {
+
+ printf("Parent process is going to sleep for 3 seconds...\n");
+
+ sleep(3);
+
+ wait(NULL); 
+
+ printf("Parent process has woken up.\n");}
+
+ return 0;}
+
+Q.2 Write the simulation program to implement demand paging and show the page scheduling and total number of page faults for the following given page reference string. Give input 
+
+n=3 as the number of memory frames. Reference String : 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2 i. Implement LRU
+
+ANSWER-2
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+int findLRU(int frames[], int n, int page, int current) {
+
+ int index = -1;
+
+ int farthest = current;
+
+ for (int i = 0; i < n; i++) {
+
+ int j;
+
+ for (j = current - 1; j >= 0; j--) {
+
+ if (frames[i] == page) {
+
+ break;}
+
+ if (frames[i] == -1 || frames[i] == frames[j]) {
+
+ if (j < farthest) {
+
+ farthest = j;
+
+ index = i;}
+
+ break;}}}
+
+ return index;}
+
+int main() {
+
+ int n = 3; 
+
+ int referenceString[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2};
+
+ int referenceStringLength = sizeof(referenceString) / sizeof(referenceString[0]);
+
+ int frames[n];
+
+ int pageFaults = 0; 
+  for (int i = 0; i < n; i++) {
+
+ frames[i] = -1;}
+
+ printf("Page Scheduling using LRU:\n");
+
+ for (int i = 0; i < referenceStringLength; i++) {
+
+ int page = referenceString[i];
+
+ int found = 0;
+
+ for (int j = 0; j < n; j++) {
+
+ if (frames[j] == page) {
+
+ found = 1;
+
+ break;}}
+
+ if (!found) {
+
+ int replaceIndex = findLRU(frames, n, page, i);
+
+ frames[replaceIndex] = page;
+
+ pageFaults++;
+
+ printf("Page %d -> Page Fault\n", page);}}
+
+ printf("Total Page Faults: %d\n", pageFaults);
+
+ return 0;}
